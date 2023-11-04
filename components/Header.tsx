@@ -4,6 +4,7 @@ import React, { useState} from 'react'
 import { Datepicker } from 'flowbite-react';
 import { Calendar, Repeat, Link, Moon } from 'react-feather';
 import { GetTimeInTimeZone } from "@/services/GetTime";
+import SearchBox from './SearchBox';
 
 
 type Props = {
@@ -31,7 +32,7 @@ const Header = (props: Props) => {
         <div className='w-4/5 m-4 flex flex-col sm:flex-row justify-between items-center gap-5'>
             {/* search box */}
             <div className='w-4/5'>
-                <input type="text" placeholder='Search' className='w-full bg-transparent border-gray-400' onChange={handleSearch} />
+                <SearchBox />
             </div>
             {/* date & icon */}
             <div className='w-full flex justify-between items-center gap-2'>
