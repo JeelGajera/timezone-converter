@@ -7,7 +7,7 @@ export const getTimezoneByCoordinates = async (
   try {
     const apiKey = process.env.NEXT_PUBLIC_TIMEZONEDB_API_KEY;
     const response = await axios.get(
-      "http://api.timezonedb.com/v2.1/get-time-zone",
+      "https://api.timezonedb.com/v2.1/get-time-zone",
       {
         params: {
           key: apiKey,
