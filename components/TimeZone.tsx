@@ -11,14 +11,14 @@ import { ItemTypes } from './constant';
 type TimeZoneProps = {
   timeZone: string,
   timeStamp: number,
-  minuteChange: (minutes: number) => void,
   cityName: string,
   removeCity: (cityName: string) => void,
   index: number,
   moveTimeZone: (dragIndex: number, hoverIndex: number) => void,
+  chnageTimeStamp: (timestamp: number) => void,
 }
 
-const TimeZone: React.FC<TimeZoneProps> = ({ timeStamp, timeZone, minuteChange, cityName, removeCity, index, moveTimeZone }) => {
+const TimeZone: React.FC<TimeZoneProps> = ({ timeStamp, timeZone, cityName, removeCity, index, moveTimeZone, chnageTimeStamp }) => {
 
   const [, ref] = useDrag({
     type: ItemTypes.TIMEZONE,
@@ -51,8 +51,11 @@ const TimeZone: React.FC<TimeZoneProps> = ({ timeStamp, timeZone, minuteChange, 
   const [selectedTime, setSelectedTime] = React.useState('');
 
   const handleSelectedMinutesChange = (e: { target: { value: string; }; }) => {
-    minuteChange(parseInt(e.target.value));
     setSelectedMinutes(parseInt(e.target.value));
+    // get timestamp from current minutes
+    const timeStamp = new Date().setHours(0, parseInt(e.target.value), 0, 0);
+    chnageTimeStamp(timeStamp);
+    console.log(timeStamp);
   }
 
   const selectedHours = Math.floor(selectedMinutes / 60);
@@ -75,19 +78,23 @@ const TimeZone: React.FC<TimeZoneProps> = ({ timeStamp, timeZone, minuteChange, 
 
   useEffect(() => {
     setSelectedTime(formatTime(selectedHours, remainingMinutes));
-  }, [selectedMinutes]);
+  }, [selectedMinutes, timeStamp]);
+
+  useEffect(() => {
+    setSelectedMinutes(currentMinutes);
+  }, [timeStamp]);
 
   return (
-    <div
-    ref={(node) => ref(drop(node))} style={{ cursor: 'grab'}}
-    >
-      <div className='p-4 mt-4 border-r border-t border-blue-600 dark:border-teal-500 rounded-md shadow-zinc-400 dark:shadow-slate-600 shadow-md relative bg-transparent'>
+    <>
+      <div className='p-4 mt-4 mb-8 border-r border-t border-blue-600 dark:border-teal-500 rounded-md shadow-zinc-400 dark:shadow-slate-600 shadow-md relative bg-transparent'>
         <div className='absolute -right-2 -top-3 text-red-500 bg-inherit cursor-pointer'
           onClick={() => removeCity(cityName)}
         >
           <XCircle />
         </div>
-        <div className='flex justify-between gap-1 items-center p-2'>
+        <div
+          ref={(node) => ref(drop(node))} style={{ cursor: 'grab' }}
+          className='flex justify-between gap-1 items-center p-2'>
           <div className='flex flex-col'>
             <h1 className='text-lg text-black dark:text-white sm:text-2xl'>{cityName}</h1>
             <h4 className='text-sm text-black dark:text-gray-500'>{locationZone}</h4>
@@ -107,11 +114,11 @@ const TimeZone: React.FC<TimeZoneProps> = ({ timeStamp, timeZone, minuteChange, 
             </div>
           </div>
         </div>
-        <div className='p-2'>
-          <TimeRangeSlider handleMinutesChange={handleSelectedMinutesChange} time={selectedMinutes} minuteChange={minuteChange} />
+        <div className='p-2 z-10'>
+          <TimeRangeSlider handleMinutesChange={handleSelectedMinutesChange} time={selectedMinutes} chnageTimeStamp={chnageTimeStamp}/>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 

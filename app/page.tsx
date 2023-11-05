@@ -6,7 +6,7 @@ import TimeZone from '@/components/TimeZone';
 import { toast } from 'react-toastify';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { ItemTypes } from '@/components/constant';
+import { useRouter } from 'next/navigation';
 
 type City = {
   cityName: string;
@@ -14,18 +14,18 @@ type City = {
 }
 
 export default function Home() {
+  const router = useRouter();
 
   const [date, setDate] = useState(new Date());
-  const [dateTime, setDateTime] = useState(new Date().getTime());
-  const [minute, setMinute] = useState(new Date().getHours() * 60 + new Date().getMinutes());
+  const [timeStamp, setTimeStamp] = useState(new Date().getTime());
   const [city, setCity] = useState<City[]>([]);
 
-  const handleDate = (date: Date) => {
-    setDateTime(new Date(date).getTime());
+  const handleTimeStamp = (timestamp: number) => {
+    setTimeStamp(timestamp);
   }
 
-  const handleMinuteChange = (minute: number) => {
-    setMinute(minute);
+  const handleDate = (date: Date) => {
+    setTimeStamp(new Date(date).getTime());
   }
 
   const handleSearchInput = (cityName: string, timezone: string) => {
@@ -56,17 +56,27 @@ export default function Home() {
   };
 
   useEffect(() => {
-    handleMinuteChange(minute);
-  }, [dateTime, minute]);
+  }, [city, timeStamp]);
 
   useEffect(() => {
-    console.log(city);
-  }, [city]);
+
+    // get cityArray param from url using URL
+    const url = new URL(window.location.href);
+    const cityArray = url.searchParams.get('cityArray');
+
+    if (cityArray) {
+      const decodedCityArray = JSON.parse(decodeURIComponent(cityArray as string));
+      setCity(decodedCityArray);
+    }
+    // clean url
+    router.push('/');
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center">
       <Header
         date={date}
+        city={city}
         handleDate={handleDate}
         handleSearchInput={handleSearchInput}
         reverseOrder={reverseCityList}
@@ -79,11 +89,11 @@ export default function Home() {
                 key={index}
                 cityName={item.cityName}
                 timeZone={item.timezone}
-                timeStamp={dateTime}
-                minuteChange={handleMinuteChange}
+                timeStamp={timeStamp}
                 removeCity={handleRemoveCity}
                 index={index}
                 moveTimeZone={moveTimeZone}
+                chnageTimeStamp={handleTimeStamp}
               />
             ))
           }

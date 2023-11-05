@@ -5,16 +5,34 @@ import { Datepicker } from 'flowbite-react';
 import { Calendar, Repeat, Link, Moon, Sun } from 'react-feather';
 import SearchBox from './SearchBox';
 import { useTheme } from "next-themes";
+import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 
+
+type City = {
+    cityName: string;
+    timezone: string;
+}
 
 type Props = {
     handleDate: (date: Date) => void;
     date: Date;
     handleSearchInput: (cityName: string, timezone: string) => void;
     reverseOrder: () => void;
+    city: City[]
 }
 
+
 const Header = (props: Props) => {
+    const router = useRouter();
+
+    const generateShareableLink = () => {
+        const domain = window.location.origin;
+        const cityArrayParam = encodeURIComponent(JSON.stringify(props.city));
+        const link = `${domain}?cityArray=${cityArrayParam}`;
+        navigator.clipboard.writeText(link);
+        toast.success('Link copied to clipboard');
+    }
 
     const [mounted, setMounted] = useState(false);
     const { theme, setTheme } = useTheme();
@@ -46,12 +64,12 @@ const Header = (props: Props) => {
                 <div><Datepicker autoHide={true} onSelectedDateChanged={props.handleDate} defaultDate={props.date} /></div>
                 <div className='flex gap-2'>
                     <IconsComp><Calendar /></IconsComp>
-                    <div
-                    onClick={props.reverseOrder}
-                    >
+                    <div onClick={props.reverseOrder} >
                         <IconsComp><Repeat className='rotate-90' /></IconsComp>
                     </div>
-                    <IconsComp><Link /></IconsComp>
+                    <div onClick={generateShareableLink}>
+                        <IconsComp><Link /></IconsComp>
+                    </div>
                     <div
                         className='w-10 h-10 bg-teal-500 rounded-full p-2 bg-opacity-50 backdrop-blur-md cursor-pointer'
                         onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
