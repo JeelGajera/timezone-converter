@@ -3,13 +3,13 @@
 import React, { useState} from 'react'
 import { Datepicker } from 'flowbite-react';
 import { Calendar, Repeat, Link, Moon } from 'react-feather';
-import { GetTimeInTimeZone } from "@/services/GetTime";
 import SearchBox from './SearchBox';
 
 
 type Props = {
     handleDate: (date: Date) => void;
     date: Date;
+    handleSearchInput: (cityName: string, timezone: string) => void;
 }
 
 const Header = (props: Props) => {
@@ -32,7 +32,7 @@ const Header = (props: Props) => {
         <div className='w-4/5 m-4 flex flex-col sm:flex-row justify-between items-center gap-5'>
             {/* search box */}
             <div className='w-4/5'>
-                <SearchBox />
+                <SearchBox  onSuggestionSelect={props.handleSearchInput}/>
             </div>
             {/* date & icon */}
             <div className='w-full flex justify-between items-center gap-2'>

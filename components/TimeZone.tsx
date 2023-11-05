@@ -10,6 +10,7 @@ type Props = {
   timeZone: string, 
   timeStamp: number,
   minuteChange: (minutes: number) => void,
+  cityName: string
 }
 
 // parameters with date object
@@ -63,7 +64,7 @@ const TimeZone = (props: Props) => {
       <div className='absolute -right-2 -top-3 text-red-500 bg-black cursor-pointer'><XCircle /></div>
       <div className='flex justify-between items-center p-2'>
         <div className='flex flex-col'>
-          <h1 className='text-lg sm:text-2xl'>Ahmedabad</h1>
+          <h1 className='text-lg sm:text-2xl'>{props.cityName}</h1>
           <h4 className='text-sm text-gray-500'>{locationZone}</h4>
         </div>
         <div className="flex flex-col">
