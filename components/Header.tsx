@@ -31,7 +31,9 @@ const Header = (props: Props) => {
         const cityArrayParam = encodeURIComponent(JSON.stringify(props.city));
         const link = `${domain}?cityArray=${cityArrayParam}`;
         navigator.clipboard.writeText(link);
-        toast.success('Link copied to clipboard');
+        toast.success('Link copied to clipboard', {
+            position: "bottom-right",
+          });
     }
 
     const [mounted, setMounted] = useState(false);

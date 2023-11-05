@@ -30,12 +30,16 @@ export default function Home() {
 
   const handleSearchInput = (cityName: string, timezone: string) => {
     setCity([...city, { cityName, timezone }]);
-    toast.success(`${cityName} is added`);
+    toast.success(`${cityName} is added`, {
+      position: "bottom-right",
+    });
   };
 
   const handleRemoveCity = (cityName: string) => {
     setCity(city.filter((city) => city.cityName !== cityName));
-    toast.error(`${cityName} is removed`);
+    toast.error(`${cityName} is removed`, {
+      position: "bottom-right",
+    });
   };
 
   const moveTimeZone = (fromIndex: number, toIndex: number) => {
