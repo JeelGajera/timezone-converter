@@ -41,7 +41,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({ onSuggestionSelect }) => {
         }
         const username = process.env.NEXT_PUBLIC_GEONAMES_USERNAME;
         // Fetch suggestions for both timezones and cities using Axios
-        const response = await axios.get(`http://api.geonames.org/searchJSON?q=${userInput}&maxRows=5&username=${username}`);
+        const response = await axios.get(`https://secure.geonames.org/searchJSON?q=${userInput}&maxRows=5&username=${username}`);
 
         const data = response.data;
         // Extract timezone and city suggestions from the API response
