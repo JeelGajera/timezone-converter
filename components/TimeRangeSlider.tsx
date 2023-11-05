@@ -1,6 +1,6 @@
 "use client";
 
-import React, { use, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 type TimeRangeSliderProps = {
   time: number;
@@ -37,7 +37,3 @@ const TimeRangeSlider: React.FC<TimeRangeSliderProps> = ({ time, handleMinutesCh
 };
 
 export default TimeRangeSlider;
-
-function minuteChange(arg0: number) {
-  throw new Error('Function not implemented.');
-}

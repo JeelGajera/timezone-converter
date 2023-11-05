@@ -2,9 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  color: #fff;
-  background: #000;
+/* dark mode and light mode */
+@media (prefers-color-scheme: dark) {
+  @tailwind utilities;
+}
+
+/* set darkmode and light mode bg and color */
+[data-theme="light"] body {
+  @apply bg-white text-gray-900;
+}
+
+[data-theme="dark"] body {
+  @apply bg-black text-gray-100;
 }
 
 /* custome scrollbar */

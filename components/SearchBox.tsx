@@ -63,7 +63,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({ onSuggestionSelect }) => {
   }, [userInput]);
 
   return (
-    <div className='relative w-full bg-black'>
+    <div className='relative w-full bg-inherit dark:bg-black'>
       <input
         type='text'
         placeholder='Search for a city or timezone'
@@ -80,7 +80,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({ onSuggestionSelect }) => {
 
       </div>
       {suggestions.length > 0 && (
-        <div className='suggestion-dropdown z-10 absolute top-10 left-0 right-0 bg-black border'>
+        <div className='suggestion-dropdown z-10 absolute top-10 left-0 right-0 bg-gray-400 dark:bg-black border'>
           {suggestions.map((suggestion, index) => (
             <div
               key={index}
@@ -90,7 +90,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({ onSuggestionSelect }) => {
                 setUserInput(suggestion.name); // Clear the input field after selection
                 setSuggestions([]); // Close the suggestion dropdown
               }}
-              className='p-2 hover:bg-gray-700 cursor-pointer'
+              className='p-2 hover:bg-black hover:text-white dark:hover:bg-gray-700 cursor-pointer'
             >
               {suggestion.name} ,{suggestion.state} - ({suggestion.countryCode})
             </div>

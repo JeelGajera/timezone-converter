@@ -1,5 +1,9 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
+import { ToastContainer } from 'react-toastify'
+import "react-toastify/dist/ReactToastify.css";
+import Provider from './provider';
+
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,9 +20,21 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <section className="mb-10 py-2">
-          {children}
-        </section>
+        <Provider>
+          <section className="mb-10 py-2">
+            {children}
+          </section>
+          <ToastContainer
+            autoClose={5000}
+            hideProgressBar={false}
+            closeOnClick={true}
+            pauseOnHover={true}
+            draggable={true}
+            rtl={false}
+            pauseOnFocusLoss={true}
+            theme='dark'
+          />
+        </Provider>
       </body>
     </html>
   )

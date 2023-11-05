@@ -4,20 +4,39 @@ import React, { useEffect } from 'react'
 import TimeRangeSlider from './TimeRangeSlider';
 import { XCircle } from 'react-feather';
 import { DateTime } from "luxon";
+import { useDrag, useDrop } from 'react-dnd';
+import { ItemTypes } from './constant';
 
 
-type Props = {
-  timeZone: string, 
+type TimeZoneProps = {
+  timeZone: string,
   timeStamp: number,
   minuteChange: (minutes: number) => void,
-  cityName: string
+  cityName: string,
+  removeCity: (cityName: string) => void,
+  index: number,
+  moveTimeZone: (dragIndex: number, hoverIndex: number) => void,
 }
 
-// parameters with date object
-const TimeZone = (props: Props) => {
+const TimeZone: React.FC<TimeZoneProps> = ({ timeStamp, timeZone, minuteChange, cityName, removeCity, index, moveTimeZone }) => {
 
-  const dateTimeObj = DateTime.fromMillis(props.timeStamp);
-  const timeZoneDateObj = dateTimeObj.setZone(props.timeZone);
+  const [, ref] = useDrag({
+    type: ItemTypes.TIMEZONE,
+    item: { index },
+  });
+
+  const [, drop] = useDrop({
+    accept: ItemTypes.TIMEZONE,
+    hover: (draggedItem: any) => {
+      if (draggedItem.index !== index) {
+        moveTimeZone(draggedItem.index, index);
+        draggedItem.index = index;
+      }
+    },
+  });
+
+  const dateTimeObj = DateTime.fromMillis(timeStamp);
+  const timeZoneDateObj = dateTimeObj.setZone(timeZone);
 
   const currentMinutes = timeZoneDateObj.hour * 60 + timeZoneDateObj.minute;
 
@@ -32,7 +51,7 @@ const TimeZone = (props: Props) => {
   const [selectedTime, setSelectedTime] = React.useState('');
 
   const handleSelectedMinutesChange = (e: { target: { value: string; }; }) => {
-    props.minuteChange(parseInt(e.target.value));
+    minuteChange(parseInt(e.target.value));
     setSelectedMinutes(parseInt(e.target.value));
   }
 
@@ -58,32 +77,39 @@ const TimeZone = (props: Props) => {
     setSelectedTime(formatTime(selectedHours, remainingMinutes));
   }, [selectedMinutes]);
 
-
   return (
-    <div className='w-4/5 p-4 mt-4 border-r border-t border-teal-500 rounded-md shadow-slate-600 shadow-md relative'>
-      <div className='absolute -right-2 -top-3 text-red-500 bg-black cursor-pointer'><XCircle /></div>
-      <div className='flex justify-between items-center p-2'>
-        <div className='flex flex-col'>
-          <h1 className='text-lg sm:text-2xl'>{props.cityName}</h1>
-          <h4 className='text-sm text-gray-500'>{locationZone}</h4>
+    <div
+    ref={(node) => ref(drop(node))} style={{ cursor: 'grab'}}
+    >
+      <div className='p-4 mt-4 border-r border-t border-blue-600 dark:border-teal-500 rounded-md shadow-zinc-400 dark:shadow-slate-600 shadow-md relative bg-transparent'>
+        <div className='absolute -right-2 -top-3 text-red-500 bg-inherit cursor-pointer'
+          onClick={() => removeCity(cityName)}
+        >
+          <XCircle />
         </div>
-        <div className="flex flex-col">
-          <input
-            type="text"
-            placeholder="HH:mm"
-            value={formatTime(selectedHours, remainingMinutes)}
-            onChange={handleInputTimeChange}
-            className="w-32 sm:w-auto text-center text-lg mb-2 p-2 border bg-transparent border-gray-300 rounded-lg"
-          />
-          <div className='flex justify-between items-center'>
-            {/* time zone and date */}
-            <h1 className='text-sm text-gray-500 pr-4'>{currentDate}</h1>
-            <h4 className='text-sm text-gray-500'>{currentTimeZone}</h4>
+        <div className='flex justify-between gap-1 items-center p-2'>
+          <div className='flex flex-col'>
+            <h1 className='text-lg text-black dark:text-white sm:text-2xl'>{cityName}</h1>
+            <h4 className='text-sm text-black dark:text-gray-500'>{locationZone}</h4>
+          </div>
+          <div className="flex flex-col">
+            <input
+              type="text"
+              placeholder="HH:mm"
+              value={formatTime(selectedHours, remainingMinutes)}
+              onChange={handleInputTimeChange}
+              className="w-32 sm:w-auto text-center text-lg text-black dark:text-white mb-2 p-2 border bg-transparent border-black dark:border-gray-300 rounded-lg"
+            />
+            <div className='flex justify-between items-center'>
+              {/* time zone and date */}
+              <h1 className='text-sm text-gray-500 pr-4'>{currentDate}</h1>
+              <h4 className='text-sm text-gray-500'>{currentTimeZone}</h4>
+            </div>
           </div>
         </div>
-      </div>
-      <div className='p-2'>
-        <TimeRangeSlider handleMinutesChange={handleSelectedMinutesChange} time={selectedMinutes} minuteChange={props.minuteChange}/>
+        <div className='p-2'>
+          <TimeRangeSlider handleMinutesChange={handleSelectedMinutesChange} time={selectedMinutes} minuteChange={minuteChange} />
+        </div>
       </div>
     </div>
   )
