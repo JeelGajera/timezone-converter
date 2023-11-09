@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useRouter } from 'next/navigation';
+import Footer from '@/components/Footer';
 
 type City = {
   cityName: string;
@@ -77,32 +78,35 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <Header
-        date={date}
-        city={city}
-        handleDate={handleDate}
-        handleSearchInput={handleSearchInput}
-        reverseOrder={reverseCityList}
-      />
-      <DndProvider backend={HTML5Backend}>
-        <div className='w-4/5 jutify-center'>
-          {
-            city.map((item, index) => (
-              <TimeZone
-                key={index}
-                cityName={item.cityName}
-                timeZone={item.timezone}
-                timeStamp={timeStamp}
-                removeCity={handleRemoveCity}
-                index={index}
-                moveTimeZone={moveTimeZone}
-                chnageTimeStamp={handleTimeStamp}
-              />
-            ))
-          }
-        </div>
-      </DndProvider>
-    </div>
+    <>
+      <div className="flex flex-col items-center justify-center">
+        <Header
+          date={date}
+          city={city}
+          handleDate={handleDate}
+          handleSearchInput={handleSearchInput}
+          reverseOrder={reverseCityList}
+        />
+        <DndProvider backend={HTML5Backend}>
+          <div className='w-4/5 jutify-center'>
+            {
+              city.map((item, index) => (
+                <TimeZone
+                  key={index}
+                  cityName={item.cityName}
+                  timeZone={item.timezone}
+                  timeStamp={timeStamp}
+                  removeCity={handleRemoveCity}
+                  index={index}
+                  moveTimeZone={moveTimeZone}
+                  chnageTimeStamp={handleTimeStamp}
+                />
+              ))
+            }
+          </div>
+        </DndProvider>
+      </div>
+      <Footer />
+    </>
   );
 }
