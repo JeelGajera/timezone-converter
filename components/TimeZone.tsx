@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react'
 import TimeRangeSlider from './TimeRangeSlider';
-import { XCircle } from 'react-feather';
+import { Star, XCircle } from 'react-feather';
 import { DateTime } from "luxon";
 import { useDrag, useDrop } from 'react-dnd';
 import { ItemTypes } from './constant';
@@ -16,9 +16,9 @@ type TimeZoneProps = {
   index: number,
   moveTimeZone: (dragIndex: number, hoverIndex: number) => void,
   chnageTimeStamp: (timestamp: number) => void,
-}
+  saveToLocal: (cityName: string, cityZone: string) => void,}
 
-const TimeZone: React.FC<TimeZoneProps> = ({ timeStamp, timeZone, cityName, removeCity, index, moveTimeZone, chnageTimeStamp }) => {
+const TimeZone: React.FC<TimeZoneProps> = ({ timeStamp, timeZone, cityName, removeCity, index, moveTimeZone, chnageTimeStamp, saveToLocal }) => {
 
   const [, ref] = useDrag({
     type: ItemTypes.TIMEZONE,
@@ -91,6 +91,11 @@ const TimeZone: React.FC<TimeZoneProps> = ({ timeStamp, timeZone, cityName, remo
           onClick={() => removeCity(cityName)}
         >
           <XCircle />
+        </div>
+        <div className='absolute -left-2 -top-3 text-yellow-500 bg-inherit cursor-pointer'
+          onClick={() => saveToLocal(cityName, timeZoneDateObj.toFormat('ZZZZ'))}
+        >
+          <Star />
         </div>
         <div
           ref={(node) => ref(drop(node))} style={{ cursor: 'grab' }}

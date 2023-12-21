@@ -37,11 +37,39 @@ export default function Home() {
   };
 
   const handleRemoveCity = (cityName: string) => {
-    setCity(city.filter((city) => city.cityName !== cityName));
-    toast.error(`${cityName} is removed`, {
+    // alert for notification
+    if (window.confirm("Are you sure you want to delete this city?")) {
+      setCity(city.filter((city) => city.cityName !== cityName));
+      // remove from local storage
+      const cityArray = localStorage.getItem('cityArray');
+      if (cityArray) {
+        const cityArrayObj = JSON.parse(cityArray);
+        const cityArrayUpdated = cityArrayObj.filter((city: City) => city.cityName !== cityName);
+        localStorage.setItem('cityArray', JSON.stringify(cityArrayUpdated));
+      }
+      toast.error(`${cityName} is removed`, {
+        position: "bottom-right",
+      });
+    } else {
+      return;
+    }
+  };
+
+  const handleSaveToLocalStorage = (cityName: string, cityZone: string) => {
+    const city = { cityName, cityZone };
+    const cityArray = localStorage.getItem('cityArray');
+    if (cityArray) {
+      const cityArrayObj = JSON.parse(cityArray);
+      const cityArrayUpdated = [...cityArrayObj, city];
+      localStorage.setItem('cityArray', JSON.stringify(cityArrayUpdated));
+    } else {
+      const cityArray = [city];
+      localStorage.setItem('cityArray', JSON.stringify(cityArray));
+    }
+    toast.success(`${cityName} is saved`, {
       position: "bottom-right",
     });
-  };
+  }
 
   const moveTimeZone = (fromIndex: number, toIndex: number) => {
     if (toIndex < 0 || toIndex >= city.length) {
@@ -75,6 +103,19 @@ export default function Home() {
     }
     // clean url
     router.push('/');
+    // create empty array in local storage if it doesn't exist
+    if (!localStorage.getItem('cityArray')) {
+      localStorage.setItem('cityArray', JSON.stringify([]));
+    } else{
+      const cityArray = localStorage.getItem('cityArray');
+      if(cityArray){
+        const cityArrayObj = JSON.parse(cityArray);
+        if(cityArrayObj.length > 0){
+          setCity(cityArrayObj);
+        }
+      }
+    }
+
   }, []);
 
   return (
@@ -100,6 +141,7 @@ export default function Home() {
                   index={index}
                   moveTimeZone={moveTimeZone}
                   chnageTimeStamp={handleTimeStamp}
+                  saveToLocal={handleSaveToLocalStorage}
                 />
               ))
             }

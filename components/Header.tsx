@@ -25,6 +25,7 @@ type Props = {
 
 const Header = (props: Props) => {
     const router = useRouter();
+    
 
     const generateShareableLink = () => {
         const domain = window.location.origin;
