@@ -47,6 +47,7 @@ export default function Home() {
         const cityArrayUpdated = cityArrayObj.filter((city: City) => city.cityName !== cityName);
         localStorage.setItem('cityArray', JSON.stringify(cityArrayUpdated));
       }
+      
       toast.error(`${cityName} is removed`, {
         position: "bottom-right",
       });
