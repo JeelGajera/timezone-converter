@@ -43,6 +43,7 @@ export default function Home() {
       // remove from local storage
       const cityArray = localStorage.getItem('cityArray');
       if (cityArray) {
+        
         const cityArrayObj = JSON.parse(cityArray);
         const cityArrayUpdated = cityArrayObj.filter((city: City) => city.cityName !== cityName);
         localStorage.setItem('cityArray', JSON.stringify(cityArrayUpdated));
